@@ -39,6 +39,8 @@ with open(config_file_path, 'r') as f:
 def generate_Token():
     try:
         bearer_token = getToken(config=config)
+        print("token generated successfully")
+        return {"status": "success", "message": f"token generated suucessfully"}
     except Exception as e:
         return {"status": "error", "message": f"Error while egenrating token: {str(e)}"}
     
