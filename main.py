@@ -14,7 +14,7 @@ import os
 mcp=FastMCP("UiPathMCP")
 current_directory = os.getcwd()
 config={}
-bearer_token=""
+bearer_token=None
 
 print(f"Current working directory using os: {current_directory}")
 config_file_path = os.path.join(current_directory, "Config.json")
@@ -25,21 +25,30 @@ with open(config_file_path, 'r') as f:
 # The logic here is critical. If getToken fails, it will print to stdout/stderr 
 # and contaminate the FastMCP communication, causing the 'bytes' error.
 # The sys.exit(1) is good, but the authentication MUST succeed cleanly.
-def init_Token():
+#def init_Token():
+#    try:
+#        bearer_token = getToken(config=config)
+#    except Exception as e:
+#        error_message = f"FATAL ERROR: Exception found while authenticating the user. Exception - {e}"
+#        print(error_message, file=sys.stderr)
+#        sys.exit(1)
+
+#init_Token()
+
+@mcp.tool
+def generate_Token():
     try:
         bearer_token = getToken(config=config)
     except Exception as e:
-        error_message = f"FATAL ERROR: Exception found while authenticating the user. Exception - {e}"
-        print(error_message, file=sys.stderr)
-        sys.exit(1)
-
-init_Token()
-
+        return {"status": "error", "message": f"Error while egenrating token: {str(e)}"}
+    
 @mcp.tool
 def listProcesses():
     # Make sure getProcess returns valid data.
     print(config)
     print(bearer_token)
+    if not bearer_token:
+        generate_Token()
     try:
         json_output= getProcess(Config=config,bearerKey=bearer_token)
         if json_output:
