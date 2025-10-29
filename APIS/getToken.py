@@ -7,7 +7,7 @@ def getToken(config:dict)->str:
     client_SecretKey=os.getenv("CLIENT_SECRET")
     scope=os.getenv("SCOPE")
     if not all([client_ID,client_SecretKey,scope]):
-        raise("Error: CLIENT_ID, SECRET KEY, or SCOPE is missing in the .env file.")
+        raise ValueError("Error: CLIENT_ID, SECRET KEY, or SCOPE is missing in the .env file.")
     
     authenticURL=config.get("auth_url")
     body={
@@ -33,5 +33,5 @@ def getToken(config:dict)->str:
         return None
     except requests.exceptions.RequestException as e:
         print(f"Authentication API call failed: {e}")
-        return None
+        raise 
     

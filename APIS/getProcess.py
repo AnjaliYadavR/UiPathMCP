@@ -24,7 +24,7 @@ def getProcess(Config:dict,bearerKey:str):
             error_details = err.response.json()
             print(f"Error Message: {error_details.get('message', 'No specific message.')}")
         except json.JSONDecodeError:
-            raise(f"Raw Error Response: {err.response.text}")
+            raise
         
     except requests.exceptions.RequestException as e:
-        raise(f"⚠️ An error occurred during the API call: {e}")
+        raise

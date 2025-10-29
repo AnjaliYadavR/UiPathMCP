@@ -25,8 +25,8 @@ def getRelease(Config:dict,bearerKey:str,processName:str):
             print(f"Error Message: {error_details.get('message', 'No specific message.')}")
         except json.JSONDecodeError:
             print(f"Raw Error Response: {err.response.text}")
-        return None
+            raise
         
     except requests.exceptions.RequestException as e:
         print(f"⚠️ An error occurred during the API call: {e}")
-        return None
+        raise
