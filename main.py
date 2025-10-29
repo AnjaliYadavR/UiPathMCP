@@ -37,6 +37,7 @@ with open(config_file_path, 'r') as f:
 
 @mcp.tool
 def generate_Token():
+    global bearer_token
     try:
         bearer_token = getToken(config=config)
         print("token generated successfully")
@@ -46,6 +47,7 @@ def generate_Token():
     
 @mcp.tool
 def listProcesses():
+    global bearer_token
     # Make sure getProcess returns valid data.
     print(config)
     print(bearer_token)
