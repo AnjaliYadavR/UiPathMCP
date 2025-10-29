@@ -6,6 +6,7 @@ def getToken(config:dict)->str:
     client_ID=os.getenv("CLIENT_ID")
     client_SecretKey=os.getenv("CLIENT_SECRET")
     scope=os.getenv("SCOPE")
+    print(f"{client_ID},{client_SecretKey},{scope}")
     if not all([client_ID,client_SecretKey,scope]):
         raise ValueError("Error: CLIENT_ID, SECRET KEY, or SCOPE is missing in the .env file.")
     
