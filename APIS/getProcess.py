@@ -26,7 +26,7 @@ def getProcess(Config:dict,bearerKey:str):
                     details = {
                         "Process": process.get("Id")
                     }
-            extracted_details.append(details)
+                    extracted_details.append(details)
 
             return extracted_details
     except requests.exceptions.HTTPError as err:
