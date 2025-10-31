@@ -16,7 +16,19 @@ def getProcess(Config:dict,bearerKey:str):
         if response:
             data=json.loads(response.text)
             print(f"Successfully retrieved {data.get('@odata.count', 0)} folders.")
-            return data
+            try:
+                processes = data.get('value', [])
+            except Exception as e:
+                raise
+            extracted_details = []
+            for process in processes:
+                if process.get("PackageType")=='Process':
+                    details = {
+                        "Process": process.get("Id")
+                    }
+            extracted_details.append(details)
+
+            return extracted_details
     except requests.exceptions.HTTPError as err:
         print(f"❌ Failed to fetch folders (HTTP Error: {err.response.status_code}).")
         # Attempt to print the detailed UiPath error message
