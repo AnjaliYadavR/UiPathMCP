@@ -7,7 +7,7 @@ import json
 
 from APIS.getToken import getToken
 from APIS.getProcess import getProcess
-from APIS.getfolders import getFolders
+from APIS.getuipathfolders import getFolders
 from APIS.triggeruipathjob import triggerUiPathJob
 from APIS.getuipathreleases import getRelease
 

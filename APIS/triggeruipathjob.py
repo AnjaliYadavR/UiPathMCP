@@ -1,7 +1,7 @@
 import requests
 import json
 from .getuipathreleases import getRelease
-from .getfolders import getFolders
+from .getuipathfolders import getFolders
 
 def triggerUiPathJob(process_name: str, config: dict, bearerKey: str) -> dict:
     releaseData={}
