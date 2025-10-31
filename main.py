@@ -24,7 +24,7 @@ with open(config_file_path, 'r') as f:
     config=json.load(f)
 
 
-#@mcp.tool
+@mcp.tool
 def generate_Token():
     global bearer_token
     try:
@@ -34,7 +34,7 @@ def generate_Token():
     except Exception as e:
         return {"status": "error", "message": f"Error while egenrating token: {str(e)}"}
     
-#@mcp.tool
+@mcp.tool
 def listProcesses():
     global bearer_token
     # Make sure getProcess returns valid data.
@@ -57,7 +57,7 @@ def listProcesses():
     except Exception as e:
         return {"status": "error", "message": f"Error listing process: {str(e)}"}
     
-#@mcp.tool
+@mcp.tool
 def triggerJob(process_name:str):
     global bearer_token
     # Make sure getProcess returns valid data.
