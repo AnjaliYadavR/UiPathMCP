@@ -1,6 +1,8 @@
 import requests
 import os
 import json
+import asyncio
+from .getToken import getToken
 
 async def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit:str):
     try:
@@ -13,8 +15,15 @@ async def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit
             "X-UIPATH-OrganizationUnitId":f"{organization_unit}",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=await requests.get(folderUrl,headers=header)
-        if response.status_code==200:
+        response=await asyncio.to_thread(requests.get(folderUrl,headers=header))
+        if response.status_code==401:
+            try:
+                bearerKey = await asyncio.to_thread(getToken(config=Config))
+                print("token generated successfully")
+                await asyncio.to_thread(getRelease(Config=Config, bearerKey=bearerKey))
+            except Exception as e:
+                raise SystemError("Failed to generate the Token.")
+        elif response.status_code==200:
             release_json=json.loads(response.text)
             print(f"Successfully retrieved {release_json.get('@odata.count', 0)} folders.")
             if release_json.get('@odata.count', 0)>0:

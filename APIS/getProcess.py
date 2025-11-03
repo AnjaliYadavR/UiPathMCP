@@ -1,6 +1,8 @@
 import requests
 import os
 import json
+import asyncio
+from .getToken import getToken
 
 async def getProcess(Config:dict,bearerKey:str):
     try:
@@ -12,8 +14,15 @@ async def getProcess(Config:dict,bearerKey:str):
             "accept": "application/json",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=await requests.get(processUrl,headers=header)
-        if response:
+        response=await asyncio.to_thread(requests.get(processUrl,headers=header))
+        if response.status_code==401:
+            try:
+                bearerKey = await asyncio.to_thread(getToken(config=Config))
+                print("token generated successfully")
+                await getProcess(Config=Config, bearerKey=bearerKey)
+            except Exception as e:
+                raise SystemError("Failed to generate the Token.")
+        elif response.status_code==200:
             data=json.loads(response.text)
             print(f"Successfully retrieved {data.get('@odata.count', 0)} folders.")
             try:

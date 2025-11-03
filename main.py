@@ -11,6 +11,7 @@ from APIS.triggeruipathjob import triggerUiPathJob
 from APIS.getuipathreleases import getRelease
 import tempfile
 import os
+import asyncio
 
 mcp=FastMCP("UiPathMCP")
 current_directory = os.getcwd()
@@ -27,7 +28,7 @@ with open(config_file_path, 'r') as f:
 async def generate_Token():
     global bearer_token
     try:
-        bearer_token = await getToken(config=config)
+        bearer_token = await asyncio.to_thread(getToken(config=config))
         print("token generated successfully")
         return {"status": "success", "message": f"token generated suucessfully"}
     except Exception as e:
@@ -41,11 +42,11 @@ async def listProcesses():
     if not bearer_token:
         print("regenerating bearer key")
         try:
-            bearer_token=await getToken(config=config)
+            bearer_token=await asyncio.to_thread(getToken(config=config))
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
-        json_output= await getProcess(Config=config,bearerKey=bearer_token)
+        json_output= await asyncio.to_thread(getProcess(Config=config,bearerKey=bearer_token))
         if json_output:
 
             return {
@@ -65,7 +66,7 @@ async def triggerJob(process_name:str):
     if not bearer_token:
         print("regenerating bearer key")
         try:
-            bearer_token=await getToken(config=config)
+            bearer_token=await asyncio.to_thread(getToken(config=config))
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:

@@ -3,6 +3,7 @@ import json
 from .getuipathreleases import getRelease
 from .getuipathfolders import getFolders
 from .getToken import getToken
+import asyncio
 
 async def triggerUiPathJob(process_name: str, config: dict, bearerKey: str) -> dict:
     releaseData={}
@@ -43,16 +44,16 @@ async def triggerUiPathJob(process_name: str, config: dict, bearerKey: str) -> d
 
     try:
         # 3. Make the POST request to start the job
-        response = await requests.post(
+        response = await asyncio.to_thread(requests.post(
             start_job_url,
             headers=headers,
             json=payload
-        )
+        ))
         if response.status_code==201:
             return {f"Job {process_name} Trigge successfully."}
         if response.status_code==401:
             try:
-                bearerKey = await getToken(config=config)
+                bearerKey = await asyncio.to_thread(getToken(config=config))
                 print("token generated successfully")
                 await triggerUiPathJob(process_name=process_name, config=config, bearerKey=bearerKey)
             except Exception as e:

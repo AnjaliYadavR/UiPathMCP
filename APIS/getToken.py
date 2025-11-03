@@ -1,5 +1,6 @@
 import requests
 import os
+import asyncio
 
 
 async def getToken(config:dict)->str:
@@ -21,7 +22,7 @@ async def getToken(config:dict)->str:
 
     try:
         print("Step 1: Authenticating and getting Bearer Token...")
-        response=await requests.post(authenticURL,data=body,headers=header)
+        response=await asyncio.to_thread(requests.post(authenticURL,data=body,headers=header))
         response.raise_for_status()
         responseJson=response.json()
         bearerKey=responseJson.get("access_token")
