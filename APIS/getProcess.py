@@ -2,7 +2,7 @@ import requests
 import os
 import json
 
-def getProcess(Config:dict,bearerKey:str):
+async def getProcess(Config:dict,bearerKey:str):
     try:
         processUrl=Config.get("base_url")+Config.get("Processurl")
         if not processUrl:
@@ -12,7 +12,7 @@ def getProcess(Config:dict,bearerKey:str):
             "accept": "application/json",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=requests.get(processUrl,headers=header)
+        response=await requests.get(processUrl,headers=header)
         if response:
             data=json.loads(response.text)
             print(f"Successfully retrieved {data.get('@odata.count', 0)} folders.")
@@ -27,7 +27,6 @@ def getProcess(Config:dict,bearerKey:str):
                         "Process": process.get("Id")
                     }
                     extracted_details.append(details)
-
             return extracted_details
     except requests.exceptions.HTTPError as err:
         print(f"❌ Failed to fetch folders (HTTP Error: {err.response.status_code}).")

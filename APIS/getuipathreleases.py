@@ -2,7 +2,7 @@ import requests
 import os
 import json
 
-def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit:str):
+async def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit:str):
     try:
         folderUrl=Config.get("base_url")+Config.get("Releaseurl").replace('$processName',processName.lower())
         if not folderUrl:
@@ -13,14 +13,20 @@ def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit:str):
             "X-UIPATH-OrganizationUnitId":f"{organization_unit}",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=requests.get(folderUrl,headers=header)
+        response=await requests.get(folderUrl,headers=header)
         if response.status_code==200:
             release_json=json.loads(response.text)
             print(f"Successfully retrieved {release_json.get('@odata.count', 0)} folders.")
             if release_json.get('@odata.count', 0)>0:
                 release_data=json.dumps(release_json.get('value'))
+                argument_value=json.loads(release_data)[0].get("InputArguments")
+                list_argument={}
+                for key,value in json.loads(json.loads(release_data)[0].get("InputArguments")).items():
+                    list_argument[key]=value
                 return {"ReleaseId":json.loads(release_data)[0].get('Key'),
-                        "organization_unit":f"{organization_unit}"}
+                        "InputArguments":list_argument,
+                        "organization_unit":f"{organization_unit}"
+                        }
             return None
     except requests.exceptions.HTTPError as err:
         print(f"❌ Failed to Releases folders (HTTP Error: {err.response.status_code}).")

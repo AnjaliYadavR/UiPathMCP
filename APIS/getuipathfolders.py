@@ -3,7 +3,7 @@ import os
 import json
 from .getuipathreleases import getRelease
 
-def getFolders(Config:dict,bearerKey:str,process_name:str):
+async def getFolders(Config:dict,bearerKey:str,process_name:str):
     try:
         folderUrl=Config.get("base_url")+Config.get("Folderurl")
         if not folderUrl:
@@ -13,13 +13,13 @@ def getFolders(Config:dict,bearerKey:str,process_name:str):
             "accept": "application/json",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=requests.get(folderUrl,headers=header)
+        response=await requests.get(folderUrl,headers=header)
         if response:
             folder_json=dict()
             folder_json=json.loads(response.content)
             print(f"Successfully retrieved {folder_json.get('@odata.count', 0)} folders.")
             for folder in folder_json.get('value'):
-                release_data=getRelease(Config=Config,bearerKey=bearerKey,processName=process_name,organization_unit=folder.get('Id'))
+                release_data=await getRelease(Config=Config,bearerKey=bearerKey,processName=process_name,organization_unit=folder.get('Id'))
                 if release_data is not None:
                     return release_data
             if release_data is None:

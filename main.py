@@ -4,13 +4,12 @@ import sys
 from dotenv import load_dotenv
 load_dotenv()
 import json
-
 from APIS.getToken import getToken
 from APIS.getProcess import getProcess
 from APIS.getuipathfolders import getFolders
 from APIS.triggeruipathjob import triggerUiPathJob
 from APIS.getuipathreleases import getRelease
-
+import tempfile
 import os
 
 mcp=FastMCP("UiPathMCP")
@@ -25,29 +24,30 @@ with open(config_file_path, 'r') as f:
 
 
 @mcp.tool
-def generate_Token():
+async def generate_Token():
     global bearer_token
     try:
-        bearer_token = getToken(config=config)
+        bearer_token = await getToken(config=config)
         print("token generated successfully")
         return {"status": "success", "message": f"token generated suucessfully"}
     except Exception as e:
         return {"status": "error", "message": f"Error while egenrating token: {str(e)}"}
     
 @mcp.tool
-def listProcesses():
+async def listProcesses():
     global bearer_token
     # Make sure getProcess returns valid data.
     print("!!Process job workflow started")
     if not bearer_token:
         print("regenerating bearer key")
         try:
-            bearer_token=getToken(config=config)
+            bearer_token=await getToken(config=config)
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
-        json_output= getProcess(Config=config,bearerKey=bearer_token)
+        json_output= await getProcess(Config=config,bearerKey=bearer_token)
         if json_output:
+
             return {
                 "status": "success",
                 "data_type": "json_string",
@@ -58,18 +58,18 @@ def listProcesses():
         return {"status": "error", "message": f"Error listing process: {str(e)}"}
     
 @mcp.tool
-def triggerJob(process_name:str):
+async def triggerJob(process_name:str):
     global bearer_token
     # Make sure getProcess returns valid data.
     print("!!Triger job workflow started")
     if not bearer_token:
         print("regenerating bearer key")
         try:
-            bearer_token=getToken(config=config)
+            bearer_token=await getToken(config=config)
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
-        json_output= triggerUiPathJob(process_name=process_name,config=config,bearerKey=bearer_token)
+        json_output= await triggerUiPathJob(process_name=process_name,config=config,bearerKey=bearer_token)
         if json_output:
             return {
                 "status": "success",
@@ -81,4 +81,5 @@ def triggerJob(process_name:str):
         return {"status": "error", "message": f"Error while triggering job: {str(e)}"}
 
 if __name__ == "__main__":
+    #triggerJob("GenerateExcelFile")
     mcp.run(transport="http", host="0.0.0.0", port=8000)
