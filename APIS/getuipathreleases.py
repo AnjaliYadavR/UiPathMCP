@@ -15,12 +15,12 @@ async def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit
             "X-UIPATH-OrganizationUnitId":f"{organization_unit}",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=await asyncio.to_thread(requests.get(folderUrl,headers=header))
+        response=await asyncio.to_thread(requests.get,folderUrl,headers=header)
         if response.status_code==401:
             try:
-                bearerKey = await asyncio.to_thread(getToken(config=Config))
+                bearerKey = await asyncio.to_thread(getToken,config=Config)
                 print("token generated successfully")
-                await asyncio.to_thread(getRelease(Config=Config, bearerKey=bearerKey))
+                await asyncio.to_thread(getRelease,Config=Config, bearerKey=bearerKey)
             except Exception as e:
                 raise SystemError("Failed to generate the Token.")
         elif response.status_code==200:

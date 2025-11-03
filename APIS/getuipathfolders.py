@@ -21,10 +21,10 @@ async def getFolders(Config:dict,bearerKey:str,process_name:str):
             folder_json=json.loads(response.content)
             print(f"Successfully retrieved {folder_json.get('@odata.count', 0)} folders.")
             for folder in folder_json.get('value'):
-                release_data=await asyncio.to_thread(getRelease(Config=Config,bearerKey=bearerKey,processName=process_name,organization_unit=folder.get('Id')))
+                release_data=await asyncio.to_thread(getRelease,Config=Config,bearerKey=bearerKey,processName=process_name,organization_unit=folder.get('Id'))
                 if response.status_code==401:
                     try:
-                        bearerKey = await asyncio.to_thread(getToken(config=Config))
+                        bearerKey = await asyncio.to_thread(getToken,config=Config)
                         print("token generated successfully")
                         await getFolders(Config=Config, bearerKey=bearerKey)
                     except Exception as e:
