@@ -17,7 +17,7 @@ async def getProcess(Config:dict,bearerKey:str):
         response=await asyncio.to_thread(requests.get,processUrl,headers=header)
         if response.status_code==401:
             try:
-                bearerKey = await asyncio.to_thread(getToken,config=Config)
+                bearerKey = getToken(config=Config)
                 print("token generated successfully")
                 await getProcess(Config=Config, bearerKey=bearerKey)
             except Exception as e:

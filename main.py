@@ -28,7 +28,7 @@ with open(config_file_path, 'r') as f:
 async def generate_Token():
     global bearer_token
     try:
-        bearer_token = await asyncio.to_thread(getToken(config=config))
+        bearer_token = await asyncio.to_thread(getToken,config=config)
         print("token generated successfully")
         return {"status": "success", "message": f"token generated suucessfully"}
     except Exception as e:
@@ -42,13 +42,12 @@ async def listProcesses():
     if not bearer_token:
         print("regenerating bearer key")
         try:
-            bearer_token=await asyncio.to_thread(getToken(config=config))
+            bearer_token=await asyncio.to_thread(getToken,config=config)
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
-        json_output= await asyncio.to_thread(getProcess(Config=config,bearerKey=bearer_token))
+        json_output= await asyncio.to_thread(getProcess,Config=config,bearerKey=bearer_token)
         if json_output:
-
             return {
                 "status": "success",
                 "data_type": "json_string",
@@ -66,11 +65,11 @@ async def triggerJob(process_name:str):
     if not bearer_token:
         print("regenerating bearer key")
         try:
-            bearer_token=await asyncio.to_thread(getToken(config=config))
+            bearer_token=await asyncio.to_thread(getToken,config=config)
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
-        json_output= await triggerUiPathJob(process_name=process_name,config=config,bearerKey=bearer_token)
+        json_output= await asyncio.to_thread(triggerUiPathJob,process_name=process_name,config=config,bearerKey=bearer_token)
         if json_output:
             return {
                 "status": "success",
@@ -82,5 +81,5 @@ async def triggerJob(process_name:str):
         return {"status": "error", "message": f"Error while triggering job: {str(e)}"}
 
 if __name__ == "__main__":
-    #triggerJob("GenerateExcelFile")
-    mcp.run(transport="http", host="0.0.0.0", port=8000)
+    asyncio.run(triggerJob("GenerateExcelFile"))
+    #mcp.run(transport="http", host="0.0.0.0", port=8000)

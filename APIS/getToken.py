@@ -3,7 +3,7 @@ import os
 import asyncio
 
 
-async def getToken(config:dict)->str:
+def getToken(config:dict)->str:
     client_ID=os.getenv("CLIENT_ID")
     client_SecretKey=os.getenv("CLIENT_SECRET")
     if not all([client_ID,client_SecretKey]):
@@ -22,7 +22,7 @@ async def getToken(config:dict)->str:
 
     try:
         print("Step 1: Authenticating and getting Bearer Token...")
-        response=await asyncio.to_thread(requests.post,authenticURL,data=body,headers=header)
+        response=requests.post(authenticURL,data=body,headers=header)
         response.raise_for_status()
         responseJson=response.json()
         bearerKey=responseJson.get("access_token")

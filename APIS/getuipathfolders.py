@@ -15,7 +15,7 @@ async def getFolders(Config:dict,bearerKey:str,process_name:str):
             "accept": "application/json",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=await requests.get(folderUrl,headers=header)
+        response=await asyncio.to_thread(requests.get,folderUrl,headers=header)
         if response:
             folder_json=dict()
             folder_json=json.loads(response.content)
