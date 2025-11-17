@@ -34,7 +34,7 @@ async def generate_Token():
     except Exception as e:
         return {"status": "error", "message": f"Error while egenrating token: {str(e)}"}
     
-@mcp.tool
+#@mcp.tool
 async def listProcesses():
     global bearer_token
     # Make sure getProcess returns valid data.
@@ -42,7 +42,8 @@ async def listProcesses():
     if not bearer_token:
         print("regenerating bearer key")
         try:
-            bearer_token=await asyncio.to_thread(getToken,config=config)
+            #bearer_token=await asyncio.to_thread(getToken,config=config)
+            print("hello")
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
@@ -81,5 +82,5 @@ async def triggerJob(process_name:str):
         return {"status": "error", "message": f"Error while triggering job: {str(e)}"}
 
 if __name__ == "__main__":
-    asyncio.run(triggerJob("GenerateExcelFile"))
+    asyncio.run(listProcesses())
     #mcp.run(transport="http", host="0.0.0.0", port=8000)

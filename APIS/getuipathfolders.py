@@ -5,7 +5,7 @@ from .getuipathreleases import getRelease
 import asyncio
 from .getToken import getToken
 
-async def getFolders(Config:dict,bearerKey:str,process_name:str):
+def getFolders(Config:dict,bearerKey:str,process_name:str):
     try:
         folderUrl=Config.get("base_url")+Config.get("Folderurl")
         if not folderUrl:
@@ -15,18 +15,18 @@ async def getFolders(Config:dict,bearerKey:str,process_name:str):
             "accept": "application/json",
             "authorization": f"Bearer {bearerKey}"
         }
-        response=await asyncio.to_thread(requests.get,folderUrl,headers=header)
+        response=requests.get(folderUrl,headers=header)
         if response:
             folder_json=dict()
             folder_json=json.loads(response.content)
             print(f"Successfully retrieved {folder_json.get('@odata.count', 0)} folders.")
             for folder in folder_json.get('value'):
-                release_data=await asyncio.to_thread(getRelease,Config=Config,bearerKey=bearerKey,processName=process_name,organization_unit=folder.get('Id'))
+                release_data=getRelease(Config=Config,bearerKey=bearerKey,processName=process_name,organization_unit=folder.get('Id'))
                 if response.status_code==401:
                     try:
-                        bearerKey = await asyncio.to_thread(getToken,config=Config)
+                        bearerKey = getToken(config=Config)
                         print("token generated successfully")
-                        await getFolders(Config=Config, bearerKey=bearerKey)
+                        getFolders(Config=Config, bearerKey=bearerKey)
                     except Exception as e:
                         raise SystemError("Failed to generate the Token.")
                 elif response.status_code==200:
