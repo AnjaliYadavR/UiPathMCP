@@ -19,20 +19,12 @@ def getFolders(Config:dict,bearerKey:str,process_name:str):
         if response:
             folder_json=dict()
             folder_json=json.loads(response.content)
-            print(f"Successfully retrieved {folder_json.get('@odata.count', 0)} folders.")
+            print(f"Successfully retrieved total number of folder {folder_json.get('@odata.count', 0)} folders.")
             for folder in folder_json.get('value'):
                 release_data=getRelease(Config=Config,bearerKey=bearerKey,processName=process_name,organization_unit=folder.get('Id'))
-                if response.status_code==401:
-                    try:
-                        bearerKey = getToken(config=Config)
-                        print("token generated successfully")
-                        getFolders(Config=Config, bearerKey=bearerKey)
-                    except Exception as e:
-                        raise SystemError("Failed to generate the Token.")
-                elif response.status_code==200:
+                if release_data is not None:
                     return release_data
-            if release_data is None:
-                return ValueError(f"Process {process_name} not found,can't trigger the job.Please check whether job name is correct ot not!!")
+            return ValueError(f"Process {process_name} not found,can't trigger the job.Please check whether job name is correct ot not!!")
     except requests.exceptions.HTTPError as err:
         print(f"❌ Failed to fetch folders (HTTP Error: {err.response.status_code}).")
         # Attempt to print the detailed UiPath error message

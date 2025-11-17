@@ -51,7 +51,6 @@ async def listProcesses():
         if json_output:
             return {
                 "status": "success",
-                "data_type": "json_string",
                 "data": json_output
                 }
         return {"status": "error", "message": f"Process not found"}
@@ -71,10 +70,10 @@ async def triggerJob(process_name:str):
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
         json_output= await asyncio.to_thread(triggerUiPathJob,process_name=process_name,config=config,bearerKey=bearer_token)
+        print("Job trigger successfully.")
         if json_output:
             return {
                 "status": "success",
-                "data_type": "json_string",
                 "data": json_output
                 }
         return {"status": "error", "message": f"failed to trigger the job"}
@@ -82,5 +81,5 @@ async def triggerJob(process_name:str):
         return {"status": "error", "message": f"Error while triggering job: {str(e)}"}
 
 if __name__ == "__main__":
-    #asyncio.run(listProcesses())
+    #asyncio.run(triggerJob("GenerateExcelFile"))
     mcp.run(transport="http", host="0.0.0.0", port=8000)
