@@ -27,7 +27,7 @@ def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit:str):
             release_json=json.loads(response.text)
             if release_json.get('@odata.count', 0)>0:
                 release_data=json.dumps(release_json.get('value'))
-                print(f"Suucessfully found process info under folder {json.loads(release_data)[0].get("OrganizationUnitFullyQualifiedName")}")
+                print(f"Suucessfully found process info under folder {json.loads(release_data)[0].get('OrganizationUnitFullyQualifiedName')}")
                 argument_value=json.loads(release_data)[0].get("InputArguments")
                 list_argument={}
                 for key,value in json.loads(json.loads(release_data)[0].get("InputArguments")).items():

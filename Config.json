@@ -7,5 +7,7 @@
    "Processurl":"odata/Processes",
    "triggerJob":"odata/Jobs/UiPath.Server.Configuration.OData.StartJobs",
    "tenant_name":"DefaultTenant",
-   "organization_unit_id":""
+   "organization_unit_id":"",
+   "CLIENT_ID":"450f0ad4-fa18-4b0b-a498-9ad7ec490f06",
+   "CLIENT_SECRET":"?VbTO#NO~*XES%Paz#SJTMfU~NpA^nFBcG44Do#GN69Wu77Pia$woYzipGyQ*9!E"
 }
