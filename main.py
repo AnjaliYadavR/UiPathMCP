@@ -34,7 +34,7 @@ async def loadConfig(context:Context):
         try:
             print(f"****************************************{type(headers)} ******** {headers.get("client_id")} ,{headers.get("client_secret")}")
             config["CLIENT_ID"]=headers.get("client_id")
-            config["client_secret"]=headers.get("client_secret")
+            config["CLIENT_SECRET"]=headers.get("client_secret")
         except json.JSONDecodeError as e:
             return {"error": f"Error parsing JSON from header- {e}"}
         except Exception as e:
