@@ -37,8 +37,8 @@ async def loadConfig(context:Context):
         if not uipath_config_str:
             return {"error": "Configuration header 'uipathmcp' missing from client request."}
         try:
-            #uipath_config = json.loads(uipath_config_str)
-            #logging.info(f"Anjali 2 - {uipath_config}")
+            uipath_config = json.loads(uipath_config_str)
+            logging.info(f"Anjali 2 - {uipath_config}")
             api_key = uipath_config_str.get("env", {})
             logging.warning(f"Anjali- {api_key}")
             config["CLIENT_ID"]=api_key.get("CLIENT_ID")
