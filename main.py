@@ -30,14 +30,9 @@ async def loadConfig(context:Context):
     logging.info(f"client id - {config.get("CLIENT_ID")} secret key - {config.get("CLIENT_SECRET")}")
     if not (config.get("CLIENT_ID",None) and config.get("CLIENT_SECRET",None)):
         headers = context.request_context.request.headers
-        logging.info(f"loading Config value from header data.{str(headers)}")
-        #uipath_config_str = headers.get("client_id")
-        #logging.info(f"{uipath_config_str} and variable type {type(uipath_config_str)}")
+        logging.info(f"loading Config value from header data.{headers}")
         try:
-            #uipath_config = json.loads(uipath_config_str)
-            #logging.info(f"Anjali 2 - {uipath_config} and type - {type(uipath_config)}")
-            #api_key = uipath_config.get("env", {})
-            #logging.warning(f"Anjali- {api_key}")
+            print(f"****************************************{type(headers)} ******** {headers.get("client_id")} ,{headers.get("client_secret")}")
             config["CLIENT_ID"]=headers.get("client_id")
             config["client_secret"]=headers.get("client_secret")
         except json.JSONDecodeError as e:
