@@ -33,7 +33,7 @@ async def loadConfig(context:Context):
         headers = context.request_context.request.headers
         logging.info(f"loading Config value from header data.{str(headers)}")
         uipath_config_str = headers.get("uipathmcp")
-        logging.info(f"{uipath_config_str}")
+        logging.info(f"{uipath_config_str} and variable type {type(uipath_config_str)}")
         if not uipath_config_str:
             return {"error": "Configuration header 'uipathmcp' missing from client request."}
         try:
@@ -44,9 +44,9 @@ async def loadConfig(context:Context):
             config["CLIENT_ID"]=api_key.get("CLIENT_ID")
             config["CLIENT_SECRET"]=api_key.get("CLIENT_SECRET")
         except json.JSONDecodeError as e:
-            return {"error": "Error parsing JSON from header- {e}"}
+            return {"error": f"Error parsing JSON from header- {e}"}
         except Exception as e:
-            return {"error": "Error while loading header- {e}"}
+            return {"error": f"Error while loading header- {e}"}
         if not api_key:
             return {"error": "Client ID and Secret Key not found in the client's 'env' block."}
 
