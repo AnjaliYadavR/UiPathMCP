@@ -25,7 +25,7 @@ with open(config_file_path, 'r') as f:
 
 @mcp.tool
 async def testConnection(context:Context):
-    return {context}
+    return {context.request_context.request.headers}
 
 @mcp.tool
 async def generate_Token():
