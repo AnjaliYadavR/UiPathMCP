@@ -22,9 +22,11 @@ with open(config_file_path, 'r') as f:
     config=json.load(f)
 
 
-def loadConfig(context:Context):
+async def loadConfig(context:Context):
     global config
+    print(f"client id - {config.get("CLIENT_ID")} secret key - {config.get("CLIENT_SECRET")}")
     if not (config.get("CLIENT_ID",None) and config.get("CLIENT_SECRET",None)):
+        print("loading Config value from header data.")
         headers = context.request_context.request.headers
         uipath_config_str = headers.get("uipathmcp")
         if not uipath_config_str:
@@ -43,7 +45,7 @@ def loadConfig(context:Context):
 async def generate_Token(context:Context):
     global bearer_token,config
     try:
-        loadConfig(context=context)
+        await loadConfig(context=context)
     except Exception as e:
         return {"status": "error", "message": f"{str(e)}"}
     
@@ -58,7 +60,7 @@ async def generate_Token(context:Context):
 async def listProcesses(context:Context):
     global bearer_token,config
     try:
-        loadConfig(context=context)
+        await loadConfig(context=context)
     except Exception as e:
         return {"status": "error", "message": f"{str(e)}"}
     # Make sure getProcess returns valid data.
@@ -85,7 +87,7 @@ async def listProcesses(context:Context):
 async def triggerJob(context:Context,process_name:str):
     global bearer_token,config
     try:
-        loadConfig(context=context)
+        await loadConfig(context=context)
     except Exception as e:
         return {"status": "error", "message": f"{str(e)}"}
     # Make sure getProcess returns valid data.
