@@ -1,4 +1,4 @@
-from fastmcp import FastMCP
+from fastmcp import FastMCP,Context
 import requests
 import sys
 from dotenv import load_dotenv
@@ -23,6 +23,9 @@ config_file_path = os.path.join(current_directory, "Config.json")
 with open(config_file_path, 'r') as f:
     config=json.load(f)
 
+@mcp.tool
+async def testConnection(context:Context):
+    return {context}
 
 @mcp.tool
 async def generate_Token():
