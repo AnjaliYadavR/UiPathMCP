@@ -30,8 +30,8 @@ async def loadConfig(context:Context):
     global config
     logging.info(f"client id - {config.get("CLIENT_ID")} secret key - {config.get("CLIENT_SECRET")}")
     if not (config.get("CLIENT_ID",None) and config.get("CLIENT_SECRET",None)):
-        logging.info("loading Config value from header data.")
         headers = context.request_context.request.headers
+        logging.info(f"loading Config value from header data.{str(headers)}")
         uipath_config_str = headers.get("uipathmcp")
         if not uipath_config_str:
             return {"error": "Configuration header 'uipathmcp' missing from client request."}
