@@ -4,6 +4,9 @@ from .getuipathreleases import getRelease
 from .getuipathfolders import getFolders
 from .getToken import getToken
 import asyncio
+import logging
+
+logger=logging.getLogger(__name__)
 
 def triggerUiPathJob(process_name: str, config: dict, bearerKey: str) -> dict:
     releaseData={}
@@ -54,7 +57,7 @@ def triggerUiPathJob(process_name: str, config: dict, bearerKey: str) -> dict:
         if response.status_code==401:
             try:
                 bearerKey = getToken(config=config)
-                print("token generated successfully")
+                logger.info("token generated successfully")
                 triggerUiPathJob(process_name=process_name, config=config, bearerKey=bearerKey)
             except Exception as e:
                 raise SystemError("Failed to generate the Token.")
