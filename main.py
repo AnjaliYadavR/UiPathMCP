@@ -31,23 +31,19 @@ async def loadConfig(context:Context):
     if not (config.get("CLIENT_ID",None) and config.get("CLIENT_SECRET",None)):
         headers = context.request_context.request.headers
         logging.info(f"loading Config value from header data.{str(headers)}")
-        uipath_config_str = headers.get("uipathmcp")
-        logging.info(f"{uipath_config_str} and variable type {type(uipath_config_str)}")
-        if not uipath_config_str:
-            return {"error": "Configuration header 'uipathmcp' missing from client request."}
+        #uipath_config_str = headers.get("client_id")
+        #logging.info(f"{uipath_config_str} and variable type {type(uipath_config_str)}")
         try:
-            uipath_config = json.loads(uipath_config_str)
-            logging.info(f"Anjali 2 - {uipath_config} and type - {type(uipath_config)}")
-            api_key = uipath_config.get("env", {})
-            logging.warning(f"Anjali- {api_key}")
-            config["CLIENT_ID"]=api_key.get("CLIENT_ID")
-            config["CLIENT_SECRET"]=api_key.get("CLIENT_SECRET")
+            #uipath_config = json.loads(uipath_config_str)
+            #logging.info(f"Anjali 2 - {uipath_config} and type - {type(uipath_config)}")
+            #api_key = uipath_config.get("env", {})
+            #logging.warning(f"Anjali- {api_key}")
+            config["CLIENT_ID"]=headers.get("client_id")
+            config["client_secret"]=headers.get("client_secret")
         except json.JSONDecodeError as e:
             return {"error": f"Error parsing JSON from header- {e}"}
         except Exception as e:
             return {"error": f"Error while loading header- {e}"}
-        if not api_key:
-            return {"error": "Client ID and Secret Key not found in the client's 'env' block."}
 
 @mcp.tool
 async def generate_Token(context:Context):
