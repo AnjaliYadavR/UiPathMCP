@@ -72,6 +72,7 @@ async def listProcesses(context:Context):
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
     try:
         json_output= await asyncio.to_thread(getProcess,Config=config,bearerKey=bearer_token)
+        logger.info("Returning the list of process")
         if json_output:
             return {
                 "status": "success",
