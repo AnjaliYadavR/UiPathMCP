@@ -12,7 +12,7 @@ import os
 import asyncio
 import logging
 
-mcp=FastMCP("UiPathMCP",request_timeout=300)
+mcp=FastMCP("UiPathMCP",request_timeout=600)
 current_directory = os.getcwd()
 config={}
 bearer_token=None
