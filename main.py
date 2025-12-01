@@ -12,7 +12,9 @@ import os
 import asyncio
 import logging
 
-mcp=FastMCP("UiPathMCP")
+mcp=FastMCP("UiPathMCP",
+            version="0.1.0",
+            request_timeout=300)
 current_directory = os.getcwd()
 config={}
 bearer_token=None
@@ -26,6 +28,7 @@ with open(config_file_path, 'r') as f:
     config=json.load(f)
 
 async def loadConfig(context:Context=None):
+    print("Loging the server value")
     global config
     try:
         logging.info(f"client id - {config.get('CLIENT_ID')} secret key - {config.get('CLIENT_SECRET')}")
