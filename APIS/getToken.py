@@ -7,11 +7,11 @@ import logging
 
 logger=logging.getLogger(__name__)
 
-def getToken(config:dict,context:Context)->str:
+def getToken(config:dict,context:Context,credential:dict)->str:
     #client_ID=os.getenv("CLIENT_ID")
     #client_SecretKey=os.getenv("CLIENT_SECRET")
-    client_ID=config.get("CLIENT_ID")
-    client_SecretKey=config.get("CLIENT_SECRET")
+    client_ID=credential.get("CLIENT_ID")
+    client_SecretKey=credential.get("CLIENT_SECRET")
     if not all([client_ID,client_SecretKey]):
         raise ValueError("CLIENT_ID and SECRET KEY is required.")
     
