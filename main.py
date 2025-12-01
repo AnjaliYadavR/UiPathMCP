@@ -25,20 +25,27 @@ config_file_path = os.path.join(current_directory, "Config.json")
 with open(config_file_path, 'r') as f:
     config=json.load(f)
 
-async def loadConfig(context:Context):
+async def loadConfig(context:Context=None):
     global config
-    logging.info(f"client id - {config.get("CLIENT_ID")} secret key - {config.get("CLIENT_SECRET")}")
-    if not (config.get("CLIENT_ID",None) and config.get("CLIENT_SECRET",None)):
-        headers = context.request_context.request.headers
-        logging.info(f"loading Config value from header data.{headers}")
-        try:
-            print(f"****************************************{type(headers)} ******** {headers.get("client_id")} ,{headers.get("client_secret")}")
-            config["CLIENT_ID"]=headers.get("client_id")
-            config["CLIENT_SECRET"]=headers.get("client_secret")
-        except json.JSONDecodeError as e:
-            return {"error": f"Error parsing JSON from header- {e}"}
-        except Exception as e:
-            return {"error": f"Error while loading header- {e}"}
+    try:
+        logging.info(f"client id - {config.get('CLIENT_ID')} secret key - {config.get('CLIENT_SECRET')}")
+        if (config.get("CLIENT_ID",None) and config.get("CLIENT_SECRET",None)):
+            headers = context.request_context.request.headers
+            logging.info(f"loading Config value from header data.{headers}")
+            try:
+                print(f"****************************************{type(headers)} ******** {headers.get('client_id')} ,{headers.get('client_secret')}")
+                config["CLIENT_ID"]=headers.get("client_id")
+                config["CLIENT_SECRET"]=headers.get("client_secret")
+            except json.JSONDecodeError as e:
+                return {"error": f"Error parsing JSON from header- {e}"}
+            except Exception as e:
+                return {"error": f"Error while loading header- {e}"}
+        else:
+            config["CLIENT_ID"]=os.getenv("CLIENT_ID")
+            config["CLIENT_SECRET"]=os.getenv("CLIENT_SECRET")
+    except Exception as e:
+        return {"status": "error", "message": f"Excepton found while loading Config value {str(e)}"}
+
 
 @mcp.tool
 async def generate_Token(context:Context):
@@ -110,4 +117,5 @@ async def triggerJob(context:Context,process_name:str):
         return {"status": "error", "message": f"Error while triggering job: {str(e)}"}
 
 if __name__ == "__main__":
+    #asyncio.run(generate_Token(None))
     mcp.run(transport="http", host="0.0.0.0", port=8000)
