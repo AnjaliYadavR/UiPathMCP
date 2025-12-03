@@ -1,11 +1,7 @@
 {
   "auth_url": "https://cloud.uipath.com/identity_/connect/token",
-   "scope": "Orchestrator.Jobs.ReadWrite",
-   "base_url": "https://cloud.uipath.com/anjalqeebhkv/DefaultTenant/orchestrator_/",
    "Folderurl": "odata/Folders",
    "Releaseurl":"odata/Releases?$filter=tolower(ProcessKey) eq '$processName'",
    "Processurl":"odata/Processes",
-   "triggerJob":"odata/Jobs/UiPath.Server.Configuration.OData.StartJobs",
-   "tenant_name":"DefaultTenant",
-   "organization_unit_id":""
+   "triggerJob":"odata/Jobs/UiPath.Server.Configuration.OData.StartJobs"
 }

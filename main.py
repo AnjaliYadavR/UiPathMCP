@@ -22,9 +22,12 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger("UiPathMCP_Server")
 
 logging.info(f"Current working directory using os: {current_directory}")
-config_file_path = os.path.join(current_directory, "Config.json")
-with open(config_file_path, 'r') as f:
-    config=json.load(f)
+try:
+    config_file_path = os.path.join(current_directory, "Config.json")
+    with open(config_file_path, 'r') as f:
+        config = json.load(f)
+except Exception as e:
+    logging.warning(f"Could not load Config.json: {e}. Relying on environment/headers.")
 
 async def loadConfig(context:Context=None):
     print("Loging the server value")
@@ -33,8 +36,10 @@ async def loadConfig(context:Context=None):
             headers = context.request_context.request.headers
             strClientId=headers.get("client_id")
             strClientSecretKey=headers.get("client_secret")
+            strBaseUrl=headers.get("Orchestratir_Url")
+            strTenantName=headers.get("tenant_name")
             if strClientId or strClientSecretKey:
-                return {"CLIENT_ID": strClientId, "CLIENT_SECRET": strClientSecretKey}
+                return {"CLIENT_ID": strClientId, "CLIENT_SECRET": strClientSecretKey,"base_url":strBaseUrl,"tenant_name":strTenantName}
         return {"CLIENT_ID": os.getenv("CLIENT_ID"), "CLIENT_SECRET": os.getenv("CLIENT_SECRET")}
     except Exception as e:
         return {"status": "error", "message": f"Excepton found while loading Config value {str(e)}"}
@@ -46,6 +51,10 @@ async def generate_Token(context:Context):
     global bearer_token,config
     try:
         credential = await loadConfig(context=context)
+        config["base_url"]=credential.get("base_url",None)
+        config["tenant_name"]=credential.get("tenant_name",None)
+        if config.get("base_url") is None or config.get("tenant_name") is None:
+            return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
         return {"status": "error", "message": f"{str(e)}"}
     
@@ -61,6 +70,10 @@ async def listProcesses(context:Context):
     global bearer_token,config
     try:
         credential = await loadConfig(context=context)
+        config["base_url"]=credential.get("base_url",None)
+        config["tenant_name"]=credential.get("tenant_name",None)
+        if config.get("base_url") is None or config.get("tenant_name") is None:
+            return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
         return {"status": "error", "message": f"{str(e)}"}
     # Make sure getProcess returns valid data.
@@ -88,6 +101,10 @@ async def triggerJob(context:Context,process_name:str):
     global bearer_token,config
     try:
         credential = await loadConfig(context=context)
+        config["base_url"]=credential.get("base_url",None)
+        config["tenant_name"]=credential.get("tenant_name",None)
+        if config.get("base_url") is None or config.get("tenant_name") is None:
+            return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
         return {"status": "error", "message": f"{str(e)}"}
     # Make sure getProcess returns valid data.
