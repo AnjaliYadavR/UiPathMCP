@@ -129,4 +129,4 @@ async def triggerJob(context:Context,process_name:str):
 
 if __name__ == "__main__":
     #asyncio.run(generate_Token(None))
-    #mcp.run(transport="http", host="0.0.0.0", port=8000)
+    mcp.run(transport="http", host="0.0.0.0", port=8000)
