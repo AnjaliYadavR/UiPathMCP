@@ -46,7 +46,7 @@ async def loadConfig(context:Context=None):
 
 
 
-#@mcp.tool
+@mcp.tool
 async def generate_Token(context:Context):
     global bearer_token,config
     try:
