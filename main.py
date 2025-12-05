@@ -94,7 +94,7 @@ async def listProcesses(context:Context):
     except Exception as e:
         return {"status": "error", "message": f"Error listing process: {str(e)}"}
     
-@mcp.tool
+#@mcp.tool
 async def triggerJob(context:Context,process_name:str):
     global bearer_token,config
     try:
