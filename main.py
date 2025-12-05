@@ -51,8 +51,6 @@ async def generate_Token(context:Context):
     global bearer_token,config
     try:
         credential = await loadConfig(context=context)
-        config["base_url"]=credential.get("base_url",None)
-        config["tenant_name"]=credential.get("tenant_name",None)
         if config.get("base_url") is None or config.get("tenant_name") is None:
             return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
