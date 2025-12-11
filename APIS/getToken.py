@@ -14,7 +14,6 @@ def getToken(config:dict,context:Context,credential:dict)->str:
     client_SecretKey=credential.get("CLIENT_SECRET")
     if not all([client_ID,client_SecretKey]):
         raise ValueError("CLIENT_ID and SECRET KEY is required.")
-    print(f"Get token Anjali log ****************** {credential}")
     authenticURL=config.get("auth_url")
     body={
         "grant_type": "client_credentials",
@@ -26,7 +25,7 @@ def getToken(config:dict,context:Context,credential:dict)->str:
     }
 
     try:
-        logger.info("Step 1: Authenticating and getting Bearer Token...")
+        logger.info("Authenticating and getting Bearer Token...")
         response=requests.post(authenticURL,data=body,headers=header)
         response.raise_for_status()
         responseJson=response.json()

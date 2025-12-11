@@ -30,16 +30,15 @@ except Exception as e:
     logging.warning(f"Could not load Config.json: {e}. Relying on environment/headers.")
 
 def loadConfig(context:Context=None):
-    print("Loging the server value")
+    logging.info(f"Loading Config !!!!!!!!!!!")
     try:
-        print(f"Anajali config function **************** {context}")
         if context:
             headers = context.request_context.request.headers
             strClientId=headers.get("client_id")
             strClientSecretKey=headers.get("client_secret")
             strBaseUrl=headers.get("orchestratir_url")
             strTenantName=headers.get("tenant_name")
-            print(f"anjali ****************************{headers}")
+            logging.info(f"getting required values from header")
             if strClientId and strClientSecretKey and strBaseUrl and strTenantName:
                 return {"CLIENT_ID": strClientId, "CLIENT_SECRET": strClientSecretKey,"base_url":strBaseUrl,"tenant_name":strTenantName}
         if __name__ =="__main__":
@@ -58,7 +57,6 @@ async def generate_Token(context:Context):
         credential = loadConfig(context=context)
         config["base_url"]=credential.get("base_url",None)
         config["tenant_name"]=credential.get("tenant_name",None)
-        print(f"Config function *************** {config}")
         if config.get("base_url") is None or config.get("tenant_name") is None:
             return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
@@ -79,7 +77,6 @@ async def listProcesses(context:Context):
         credential = loadConfig(context=context)
         config["base_url"]=credential.get("base_url",None)
         config["tenant_name"]=credential.get("tenant_name",None)
-        print(f"Config function *************** {config}")
         if config.get("base_url") is None or config.get("tenant_name") is None:
             return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
@@ -100,7 +97,7 @@ async def listProcesses(context:Context):
                 "status": "success",
                 "data": json_output
                 }
-        return {"status": "error", "message": f"Process not found"}
+        return {"status": "error", "message": f"The process has not been deployed to the orchestrator yet."}
     except Exception as e:
         return {"status": "error", "message": f"Error listing process: {str(e)}"}
     
@@ -120,7 +117,6 @@ async def triggerJob(context:Context,process_name:str):
     if not bearer_token:
         logging.info("regenerating bearer key")
         try:
-            print(f"anjali 2 -------- Grnrrate the token")
             bearer_token=await asyncio.to_thread(getToken,context=context,config=config,credential =credential )
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
