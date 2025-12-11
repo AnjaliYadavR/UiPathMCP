@@ -32,6 +32,7 @@ except Exception as e:
 def loadConfig(context:Context=None):
     print("Loging the server value")
     try:
+        print(f"Anajali config function **************** {context}")
         if context:
             headers = context.request_context.request.headers
             strClientId=headers.get("client_id")
@@ -39,9 +40,12 @@ def loadConfig(context:Context=None):
             strBaseUrl=headers.get("orchestratir_url")
             strTenantName=headers.get("tenant_name")
             print(f"anjali ****************************{headers}")
-            if strClientId or strClientSecretKey:
+            if strClientId and strClientSecretKey and strBaseUrl and strTenantName:
                 return {"CLIENT_ID": strClientId, "CLIENT_SECRET": strClientSecretKey,"base_url":strBaseUrl,"tenant_name":strTenantName}
-        return {"CLIENT_ID": os.getenv("CLIENT_ID"), "CLIENT_SECRET": os.getenv("CLIENT_SECRET")}
+        if __name__ =="__main__":
+                return {"CLIENT_ID": os.getenv("CLIENT_ID"), "CLIENT_SECRET": os.getenv("CLIENT_SECRET") , "base_url":os.getenv("orchestratir_url"),"tenant_name":os.getenv("tenant_name")}
+        return {"status": "error", "message": f"ifollowing values  are required - Client id / Secret Key / base url/ tenant name, kindly check and retrigger the tool."}
+        
     except Exception as e:
         return {"status": "error", "message": f"Excepton found while loading Config value {str(e)}"}
 
@@ -52,6 +56,9 @@ async def generate_Token(context:Context):
     global bearer_token,config
     try:
         credential = loadConfig(context=context)
+        config["base_url"]=credential.get("base_url",None)
+        config["tenant_name"]=credential.get("tenant_name",None)
+        print(f"Config function *************** {config}")
         if config.get("base_url") is None or config.get("tenant_name") is None:
             return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
@@ -130,5 +137,5 @@ async def triggerJob(context:Context,process_name:str):
         return {"status": "error", "message": f"Error while triggering job: {str(e)}"}
 
 if __name__ == "__main__":
-    #asyncio.run(generate_Token(None))
+    #asyncio.run(listProcesses(None))
     mcp.run(transport="http", host="0.0.0.0", port=8000)
