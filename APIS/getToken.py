@@ -14,7 +14,7 @@ def getToken(config:dict,context:Context,credential:dict)->str:
     client_SecretKey=credential.get("CLIENT_SECRET")
     if not all([client_ID,client_SecretKey]):
         raise ValueError("CLIENT_ID and SECRET KEY is required.")
-    
+    print(f"Get token Anjali log ****************** {credential}")
     authenticURL=config.get("auth_url")
     body={
         "grant_type": "client_credentials",

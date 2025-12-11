@@ -29,14 +29,14 @@ try:
 except Exception as e:
     logging.warning(f"Could not load Config.json: {e}. Relying on environment/headers.")
 
-async def loadConfig(context:Context=None):
+def loadConfig(context:Context=None):
     print("Loging the server value")
     try:
         if context:
             headers = context.request_context.request.headers
             strClientId=headers.get("client_id")
             strClientSecretKey=headers.get("client_secret")
-            strBaseUrl=headers.get("orchestratir_Url")
+            strBaseUrl=headers.get("orchestratir_url")
             strTenantName=headers.get("tenant_name")
             print(f"anjali ****************************{headers}")
             if strClientId or strClientSecretKey:
@@ -51,7 +51,7 @@ async def loadConfig(context:Context=None):
 async def generate_Token(context:Context):
     global bearer_token,config
     try:
-        credential = await loadConfig(context=context)
+        credential = loadConfig(context=context)
         if config.get("base_url") is None or config.get("tenant_name") is None:
             return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
@@ -67,8 +67,9 @@ async def generate_Token(context:Context):
 @mcp.tool
 async def listProcesses(context:Context):
     global bearer_token,config
+    logging.info("!!Process job workflow started : Load Config")
     try:
-        credential = await loadConfig(context=context)
+        credential = loadConfig(context=context)
         config["base_url"]=credential.get("base_url",None)
         config["tenant_name"]=credential.get("tenant_name",None)
         print(f"Config function *************** {config}")
@@ -100,7 +101,7 @@ async def listProcesses(context:Context):
 async def triggerJob(context:Context,process_name:str):
     global bearer_token,config
     try:
-        credential = await loadConfig(context=context)
+        credential = loadConfig(context=context)
         config["base_url"]=credential.get("base_url",None)
         config["tenant_name"]=credential.get("tenant_name",None)
         if config.get("base_url") is None or config.get("tenant_name") is None:
@@ -112,6 +113,7 @@ async def triggerJob(context:Context,process_name:str):
     if not bearer_token:
         logging.info("regenerating bearer key")
         try:
+            print(f"anjali 2 -------- Grnrrate the token")
             bearer_token=await asyncio.to_thread(getToken,context=context,config=config,credential =credential )
         except Exception as e:
             return {"status": "error", "message": f"Error while regenrating token: {str(e)}"}
