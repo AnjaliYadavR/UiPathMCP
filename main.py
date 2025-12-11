@@ -36,8 +36,9 @@ async def loadConfig(context:Context=None):
             headers = context.request_context.request.headers
             strClientId=headers.get("client_id")
             strClientSecretKey=headers.get("client_secret")
-            strBaseUrl=headers.get("Orchestratir_Url")
+            strBaseUrl=headers.get("orchestratir_Url")
             strTenantName=headers.get("tenant_name")
+            print(f"anjali ****************************{headers}")
             if strClientId or strClientSecretKey:
                 return {"CLIENT_ID": strClientId, "CLIENT_SECRET": strClientSecretKey,"base_url":strBaseUrl,"tenant_name":strTenantName}
         return {"CLIENT_ID": os.getenv("CLIENT_ID"), "CLIENT_SECRET": os.getenv("CLIENT_SECRET")}
@@ -46,7 +47,7 @@ async def loadConfig(context:Context=None):
 
 
 
-@mcp.tool
+#@mcp.tool
 async def generate_Token(context:Context):
     global bearer_token,config
     try:
@@ -70,6 +71,7 @@ async def listProcesses(context:Context):
         credential = await loadConfig(context=context)
         config["base_url"]=credential.get("base_url",None)
         config["tenant_name"]=credential.get("tenant_name",None)
+        print(f"Config function *************** {config}")
         if config.get("base_url") is None or config.get("tenant_name") is None:
             return {"status": "error", "message": "Orchestrator base URL/Tenant Name can't be empty"}
     except Exception as e:
@@ -94,7 +96,7 @@ async def listProcesses(context:Context):
     except Exception as e:
         return {"status": "error", "message": f"Error listing process: {str(e)}"}
     
-#@mcp.tool
+@mcp.tool
 async def triggerJob(context:Context,process_name:str):
     global bearer_token,config
     try:
