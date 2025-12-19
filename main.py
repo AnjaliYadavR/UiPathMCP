@@ -101,7 +101,7 @@ async def listProcesses(context:Context):
     except Exception as e:
         return {"status": "error", "message": f"Error listing process: {str(e)}"}
     
-#@mcp.tool
+@mcp.tool
 async def triggerJob(context:Context,process_name:str):
     global bearer_token,config
     try:
@@ -133,5 +133,5 @@ async def triggerJob(context:Context,process_name:str):
         return {"status": "error", "message": f"Error while triggering job: {str(e)}"}
 
 if __name__ == "__main__":
-    asyncio.run(triggerJob(None,"CallAgent_RPA_Worflow"))
-    #mcp.run(transport="http", host="0.0.0.0", port=8000)
+    #asyncio.run(triggerJob(None,"CallAgent_RPA_Worflow"))
+    mcp.run(transport="http", host="0.0.0.0", port=8000)
