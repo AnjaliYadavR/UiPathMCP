@@ -51,6 +51,6 @@ def getProcess(Config:dict,bearerKey:str=None):
         logger.error(f"Request Exception - {str(e)}")
         raise
     except Exception as e:
-        logger.error(f"General exception - {str(e)}")
+        logger.error(f"General exception for get process - {str(e)}")
         raise
     return None
