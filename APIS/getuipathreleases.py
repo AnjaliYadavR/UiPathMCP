@@ -33,8 +33,10 @@ def getRelease(Config:dict,bearerKey:str,processName:str,organization_unit:str):
                 logger.info(f"Suucessfully found process info under folder {json.loads(release_data)[0].get('OrganizationUnitFullyQualifiedName')}")
                 argument_value=json.loads(release_data)[0].get("InputArguments")
                 list_argument={}
-                for key,value in json.loads(json.loads(release_data)[0].get("InputArguments")).items():
-                    list_argument[key]=value
+                if argument_value:
+                    logger.info(f"Release argument found.")
+                    for key,value in json.loads(json.loads(release_data)[0].get("InputArguments")).items():
+                        list_argument[key]=value
                 return {"ReleaseId":json.loads(release_data)[0].get('Key'),
                         "InputArguments":list_argument,
                         "organization_unit":f"{organization_unit}"
